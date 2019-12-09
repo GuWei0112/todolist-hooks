@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, memo } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -8,24 +8,24 @@ import EditIcon from "@material-ui/icons/Edit";
 import useToggleState from "./hooks/useToggleState.component";
 import EditTodoform from "./EditTodoform.component";
 import { ThemeContext } from "../context/theme.context";
-import { TodosContext } from "../context/todo.context";
+import { DispatchContext } from "../context/todo.context";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
-export default ({ todo }) => {
-  const { removeTodo, toggleTodo, editTodo } = useContext(TodosContext);
+export default memo(({ todo }) => {
+  const dispatch = useContext(DispatchContext);
   const { switchmode } = useContext(ThemeContext);
   const [isEditing, toggle] = useToggleState(false);
   return (
     <ListItem style={{ height: "64px" }}>
       {isEditing ? (
-        <EditTodoform editTodo={editTodo} todo={todo} toggleEditForm={toggle} />
+        <EditTodoform todo={todo} toggleEditForm={toggle} />
       ) : (
         <>
           <Checkbox
             color={switchmode ? "secondary" : "primary"}
             tabIndex={-1}
             checked={todo.completed}
-            onClick={() => toggleTodo(todo.id)}
+            onClick={() => dispatch({ type: "TOGGLE", id: todo.id })}
           />
           <ListItemText
             style={{ textDecoration: todo.completed ? "Line-through" : "none" }}
@@ -33,7 +33,10 @@ export default ({ todo }) => {
             {todo.task}
           </ListItemText>
           <ListItemSecondaryAction>
-            <IconButton aria-label="Delete" onClick={() => removeTodo(todo.id)}>
+            <IconButton
+              aria-label="Delete"
+              onClick={() => dispatch({ type: "REMOVE", id: todo.id })}
+            >
               <DeleteIcon />
             </IconButton>
             <IconButton aria-label="Edit" onClick={toggle}>
@@ -44,4 +47,4 @@ export default ({ todo }) => {
       )}
     </ListItem>
   );
-};
+});

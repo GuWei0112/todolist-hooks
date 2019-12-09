@@ -5,7 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import { TodosContext } from "../context/todo.context";
 import Todo from "./Todo.component";
 export default () => {
-  const {todos} = React.useContext(TodosContext)
+  const todos = React.useContext(TodosContext)
   if (todos.length > 0) {
     return (
       <Paper>

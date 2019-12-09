@@ -3,7 +3,7 @@ export default () => {
   const [todos, setTodos] = useLocalStorage("todos", []);
 
   const createId = () => {
-    return todos.sort((a, b) => a - b).unshift() + 1;
+    return todos.sort((a, b) => a.id - b.id).unshift() + 1;
   };
 
   return {
